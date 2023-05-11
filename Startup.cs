@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using System.Net;
+using System.Net.Mime;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
+using WebAPI.Helper;
+using WebAPI.Interfaces;
 
 namespace WebAPI
 {
@@ -27,8 +20,10 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddCors();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,6 +32,19 @@ namespace WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else {
+                app.UseExceptionHandler(
+                    options =>{
+                        options.Run(
+                            async context =>
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                                var ex = ContentDisposition.Features.Get<>
+                            }
+                        )
+                    }
+                );
             }
 
             app.UseRouting();
