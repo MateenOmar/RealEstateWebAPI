@@ -1,8 +1,5 @@
-﻿using System.Net;
-using System.Net.Mime;
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using WebAPI.Data;
@@ -53,11 +50,16 @@ namespace WebAPI
 
             app.UseRouting();
 
+            app.UseHsts();
+            app.UseHttpsRedirection();
+
             app.UseCors(m => m.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
             app.UseAuthentication();
-
             app.UseAuthorization();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
