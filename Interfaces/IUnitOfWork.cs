@@ -7,10 +7,16 @@ namespace WebAPI.Interfaces
 {
     public interface IUnitOfWork
     {
-        ICityRepository CityRepository {get;}
+        ICityRepository CityRepository {get; }
 
-        IUserRepository UserRepository {get;}
+         IUserRepository UserRepository {get; }
 
-        Task<bool> SaveAsync();    
+         IPropertyRepository PropertyRepository {get; }
+
+         IFurnishingTypeRepository FurnishingTypeRepository {get; }
+
+         IPropertyTypeRepository PropertyTypeRepository {get; }
+
+         Task<bool> SaveAsync();    
     }
 }
